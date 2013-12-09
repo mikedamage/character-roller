@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+require File.join(File.dirname(__FILE__), '..', 'lib', 'roller.rb')
+
+unless ARGV.empty?
+  if ARGV.first =~ /\d+[dD]\d+/
+    Roller.new.roll(ARGV.first)
+  else
+    Roller.start
+  end
+else
+  Roller.start
+end
+
+# vim: set ft=ruby ts=2 sw=2 expandtab :
