@@ -4,9 +4,11 @@ class Roller < Thor
   include Thor::Actions
 
   desc 'roll NdN', 'Rolls N, N-sided dice and returns the total result'
+  method_option :show_results, type: :boolean, default: false
   def roll(ndn)
     match_reg = %r{(\d+)[dD](\d+)}
     matches   = match_reg.match ndn
+    results   = []
 
     if matches.length === 3
       dice  = matches[1].to_i
@@ -14,9 +16,12 @@ class Roller < Thor
       total = 0
 
       dice.times do
-        total += roll_one_die sides
+        result = roll_one_die sides
+        results << result
+        total += result
       end
 
+      p results if options.show_results
       say total
     else
       say "Invalid input", :red
