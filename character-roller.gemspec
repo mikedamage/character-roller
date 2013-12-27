@@ -7,6 +7,7 @@ Gem::Specification.new do |s|
   s.license  = "MIT"
   s.platform = Gem::Platform::RUBY
   s.bindir   = 'bin'
+  s.executables << 'dice'
   s.files    = %w(
     VERSION
     Rakefile
