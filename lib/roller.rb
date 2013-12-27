@@ -57,7 +57,8 @@ class Roller < Thor
 
   no_tasks do
     def roll_one_die(sides, ignore_ones = false)
-      result = 1 + Random.rand(sides)
+      rander = Random.new
+      result = rander.rand(1..sides)
 
       if result === 1 && ignore_ones
         result = roll_one_die sides, ignore_ones
