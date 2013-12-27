@@ -30,22 +30,28 @@ class Roller < Thor
   end
 
   desc 'ability_score', 'Rolls an ability score (4d6, discard lowest, re-roll 1s)'
+  method_option :show_results, type: :boolean
   def ability_score
-    results = []
+    roll = roll_ability_score
 
-    4.times do
-      results << roll_one_die(6, true)
+    if options.show_results
+      print roll[:results].to_s + " = "
     end
 
-    results.sort!.shift
-
-    say results.reduce :+
+    say roll[:total].to_s
   end
 
   desc 'ability_scores', 'Rolls 6 ability scores'
+  method_option :show_results, type: :boolean
   def ability_scores
     6.times do
-      ability_score
+      res = roll_ability_score
+
+      if options.show_results
+        print res[:results].to_s + " = "
+      end
+
+      say res[:total]
     end
   end
 
@@ -54,10 +60,26 @@ class Roller < Thor
       result = 1 + Random.rand(sides)
 
       if result === 1 && ignore_ones
-        result = roll_one_die sides, true
+        result = roll_one_die sides, ignore_ones
       end
 
       result
+    end
+
+    def roll_ability_score
+      results = {
+        results: [],
+        total: 0
+      }
+
+      4.times do
+        results[:results] << roll_one_die(6, true)
+      end
+
+      results[:results].sort!.shift
+      results[:total] = results[:results].reduce :+
+
+      results
     end
   end
 end
