@@ -1,3 +1,9 @@
+PATH
+  remote: .
+  specs:
+    character-roller (0.1.0)
+      thor
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -10,11 +16,15 @@ GEM
     rake (10.1.0)
     slop (3.4.7)
     thor (0.18.1)
+    watson (0.0.2)
+      yajl-ruby
+    yajl-ruby (1.2.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  character-roller!
   pry
   rake
-  thor
+  watson
