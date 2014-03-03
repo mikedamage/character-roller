@@ -3,8 +3,12 @@ require 'thor'
 class Roller < Thor
   include Thor::Actions
 
+  class_option :show_results,
+    type: :boolean,
+    default: false,
+    desc: "Show each die roll result"
+
   desc 'roll NdN', 'Rolls N, N-sided dice and returns the total result'
-  method_option :show_results, type: :boolean, default: false
   def roll(ndn)
     match_reg = %r{(\d+)[dD](\d+)}
     matches   = match_reg.match ndn
@@ -30,7 +34,6 @@ class Roller < Thor
   end
 
   desc 'ability_score', 'Rolls an ability score (4d6, discard lowest, re-roll 1s)'
-  method_option :show_results, type: :boolean
   def ability_score
     roll = roll_ability_score
 
@@ -42,7 +45,6 @@ class Roller < Thor
   end
 
   desc 'ability_scores', 'Rolls 6 ability scores'
-  method_option :show_results, type: :boolean
   def ability_scores
     6.times do
       res = roll_ability_score
