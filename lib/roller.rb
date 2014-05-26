@@ -34,6 +34,11 @@ class Roller < Thor
   end
 
   desc 'ability_score', 'Rolls an ability score (4d6, discard lowest, re-roll 1s)'
+  method_option :bonus,
+    type: :boolean,
+    desc: "Show the score's bonus",
+    default: false,
+    aliases: %w( -b )
   def ability_score
     roll = roll_ability_score
 
@@ -41,10 +46,22 @@ class Roller < Thor
       print roll[:results].to_s + " = "
     end
 
-    say roll[:total].to_s
+    print roll[:total].to_s
+
+    if options.bonus
+      bonus = calculate_bonus res[:total], true
+      print "\t(#{bonus})\n"
+    else
+      print "\n"
+    end
   end
 
   desc 'ability_scores', 'Rolls 6 ability scores'
+  method_option :bonuses,
+    type: :boolean,
+    desc: "Show the scores' bonuses",
+    default: false,
+    aliases: %w( -b )
   def ability_scores
     6.times do
       res = roll_ability_score
@@ -53,7 +70,14 @@ class Roller < Thor
         print res[:results].to_s + " = "
       end
 
-      say res[:total]
+      print res[:total]
+
+      if options.bonuses
+        bonus = calculate_bonus res[:total], true
+        print "\t(#{bonus})\n"
+      else
+        print "\n"
+      end
     end
   end
 
@@ -83,6 +107,18 @@ class Roller < Thor
       results[:total] = results[:results].reduce :+
 
       results
+    end
+
+    def calculate_bonus(score, as_string = false)
+      bonus = score / 2 - 5
+
+      if as_string
+        str  = if bonus > 0 then "+" else "" end
+        str += bonus.to_s
+        return str
+      end
+
+      bonus
     end
   end
 end
