@@ -81,6 +81,25 @@ class Roller < Thor
     end
   end
 
+  desc 'bonus SCORE', 'Show the bonus granted by an ability score'
+  def bonus(score)
+
+    begin
+      score = score.to_i
+    rescue
+      say 'Score must be an integer!', :red
+      exit 1
+    end
+
+    if score < 1
+      say 'Score must be greater than 0!', :red
+      exit 2
+    end
+
+    bonus = calculate_bonus score, true
+    say bonus
+  end
+
   no_tasks do
     def roll_one_die(sides, ignore_ones = false)
       rander = Random.new
