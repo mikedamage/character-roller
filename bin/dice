@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
-require File.join(File.dirname(__FILE__), '..', 'lib', 'roller.rb')
+$:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
+require 'roller'
 
 unless ARGV.empty?
   if ARGV.first =~ /\d+[dD]\d+/
