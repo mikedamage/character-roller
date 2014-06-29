@@ -22,3 +22,14 @@ Once `rake install` is run, you'll have a `dice` executable in your `PATH`.
 ## Usage
 
 `bin/dice` is the main executable. You can see which commands are available by running `dice help`. Get detailed info on a command by running `dice help COMMAND`.
+
+    Commands:
+      dice ability_score   # Rolls an ability score (4d6, discard lowest, re-roll 1s)
+      dice ability_scores  # Rolls 6 ability scores
+      dice bonus SCORE     # Show the bonus granted by an ability score
+      dice help [COMMAND]  # Describe available commands or one specific command
+      dice roll NdN        # Rolls N, N-sided dice and returns the total result
+      dice version         # Display version information
+
+    Options:
+      -s, [--show-results], [--no-show-results]  # Show each die roll result
