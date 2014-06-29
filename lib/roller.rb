@@ -4,11 +4,19 @@ require 'true-random'
 class Roller < Thor
   include Thor::Actions
 
+  default_task :version
+
   class_option :show_results,
     type: :boolean,
     default: false,
     desc: "Show each die roll result",
     aliases: [ '-s' ]
+
+  desc 'version', 'Display version information'
+  def version
+    ver = File.read(File.join(File.dirname(__FILE__), '..', 'VERSION')).chomp!
+    say "Character Roller v#{ver.to_s}"
+  end
 
   desc 'roll NdN', 'Rolls N, N-sided dice and returns the total result'
   def roll(ndn)
