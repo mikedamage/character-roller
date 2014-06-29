@@ -1,4 +1,5 @@
 require 'thor'
+require 'true-random'
 
 class Roller < Thor
   include Thor::Actions
@@ -6,26 +7,22 @@ class Roller < Thor
   class_option :show_results,
     type: :boolean,
     default: false,
-    desc: "Show each die roll result"
+    desc: "Show each die roll result",
+    aliases: [ '-s' ]
 
   desc 'roll NdN', 'Rolls N, N-sided dice and returns the total result'
   def roll(ndn)
     match_reg = %r{(\d+)[dD](\d+)}
     matches   = match_reg.match ndn
-    results   = []
 
     if matches.length === 3
       dice  = matches[1].to_i
       sides = matches[2].to_i
-      total = 0
 
-      dice.times do
-        result = roll_one_die sides
-        results << result
-        total += result
-      end
+      rolls = roll_dice dice, sides
+      total = rolls.reduce :+
 
-      p results if options.show_results
+      p rolls if options.show_results
       say total
     else
       say "Invalid input", :red
@@ -100,45 +97,39 @@ class Roller < Thor
     say bonus
   end
 
-  no_tasks do
-    def roll_one_die(sides, ignore_ones = false)
-      rander = Random.new
-      result = rander.rand(1..sides)
+  private
 
-      if result === 1 && ignore_ones
-        result = roll_one_die sides, ignore_ones
-      end
+  def roll_dice(ndice = 1, nsides = 6, ignore_ones = false)
+    rander = TrueRandom::Random.new
+    start_num = if ignore_ones then 2 else 1 end
+    results = rander.integer ndice, start_num, nsides
+    results
+  end
 
-      result
+  def roll_ability_score
+    results = {
+      results: [],
+      total: 0
+    }
+
+    results[:results] = roll_dice 4, 6, true
+
+    results[:results].sort!.shift
+    results[:total] = results[:results].reduce :+
+
+    results
+  end
+
+  def calculate_bonus(score, as_string = false)
+    bonus = score / 2 - 5
+
+    if as_string
+      str  = if bonus > 0 then "+" else "" end
+      str += bonus.to_s
+      return str
     end
 
-    def roll_ability_score
-      results = {
-        results: [],
-        total: 0
-      }
-
-      4.times do
-        results[:results] << roll_one_die(6, true)
-      end
-
-      results[:results].sort!.shift
-      results[:total] = results[:results].reduce :+
-
-      results
-    end
-
-    def calculate_bonus(score, as_string = false)
-      bonus = score / 2 - 5
-
-      if as_string
-        str  = if bonus > 0 then "+" else "" end
-        str += bonus.to_s
-        return str
-      end
-
-      bonus
-    end
+    bonus
   end
 end
 
