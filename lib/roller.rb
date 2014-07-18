@@ -108,9 +108,10 @@ class Roller < Thor
   private
 
   def roll_dice(ndice = 1, nsides = 6, ignore_ones = false)
-    rander = TrueRandom::Random.new
+    rander    = TrueRandom::Random.new
+    # [todo] - Figure out if starting at 2 is statistically different from simply re-rolling and continuing to ignore 1's
     start_num = if ignore_ones then 2 else 1 end
-    results = rander.integer ndice, start_num, nsides
+    results   = rander.integer ndice, start_num, nsides
     results
   end
 
