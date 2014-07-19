@@ -5,12 +5,16 @@
 
 # Directories
 [dirs]
-./
+./bin
+./lib
 
 
 # Tags
 [tags]
 fix
+fixme
+kludge
+hack
 review
 todo
 
