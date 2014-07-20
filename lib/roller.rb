@@ -1,8 +1,15 @@
+require 'json'
+require 'net/http'
+require 'uri'
 require 'thor'
+
+# [todo] - check for internet connectivity. If none, fallback to SecureRandom
 require 'true-random'
 
 class Roller < Thor
   include Thor::Actions
+
+  JSONIP_URL = "http://jsonip.com/"
 
   default_task :version
 
@@ -108,10 +115,18 @@ class Roller < Thor
   private
 
   def roll_dice(ndice = 1, nsides = 6, ignore_ones = false)
-    rander    = TrueRandom::Random.new
+    rander  = TrueRandom::Random.new
     # [todo] - Figure out if starting at 2 is statistically different from simply re-rolling and continuing to ignore 1's
-    start_num = if ignore_ones then 2 else 1 end
-    results   = rander.integer ndice, start_num, nsides
+    results = rander.integer ndice, 1, nsides
+    results = [results] unless results.is_a? Array
+
+    if ignore_ones && results.include?(1)
+      results.delete_if {|n| n === 1 }
+      diff     = ndice - results.size
+      new_ints = roll_dice diff, nsides, ignore_ones
+      results.concat new_ints
+    end
+
     results
   end
 
@@ -139,6 +154,23 @@ class Roller < Thor
     end
 
     bonus
+  end
+
+  def check_quota
+    rander = TrueRandom::Random.new
+    rander.quota get_external_ip
+  end
+
+  def get_external_ip
+    uri  = URI.parse JSONIP_URL
+    resp = Net::HTTP.get_response uri
+
+    if resp.is_a? Net::HTTPOK
+      json = JSON.parse resp.body
+      return json['ip']
+    end
+
+    nil
   end
 end
 
