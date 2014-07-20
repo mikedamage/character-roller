@@ -4,20 +4,36 @@ by Mike Green
 
 _A d20 ablity score generator and all-around Swiss Army Knife for RPG geeks_
 
+[![Gem Version](https://badge.fury.io/rb/character-roller.svg)](http://badge.fury.io/rb/character-roller)
+
 ## About
 
-I started this project as a quick way to generate ability scores for NPCs, and I ended up with a decent CLI dice roller. Of course the results can't be truly random, but it works just fine for the random allies and enemies your players may encounter.
+I started this project as a quick way to generate ability scores for NPCs, and I ended up with a decent CLI dice roller in the process. I expect it'll only appeal to RPG geeks who also dig the command line.
+
+**NOTE:** This program requires an Internet connection. It utilizes the [TrueRandom][true_random] library to get actual random numbers from [Random.org][random_org].
 
 ## Installation
 
-When Character Roller is a little more polished I'll put it up on rubygems.org. Until then it's easy to build and install manually. Alternately, `bin/dice` can just be run from the project directory once dependencies are installed.
+The quickest way to install Character Roller is via Rubygems:
+```shell
+[sudo] gem install character-roller
+```
 
-```bash
+You can also install from this repo's master branch:
+```shell
+git clone https://github.com/mikedamage/character-roller.git
+cd character-roller
 bundle install
+rake build
 rake install
 ```
 
-Once `rake install` is run, you'll have a `dice` executable in your `PATH`.
+Alternately, `bin/dice` can just be run from the project directory once dependencies are installed.
+
+```bash
+bundle install
+./bin/dice 4d6
+```
 
 ## Usage
 
@@ -33,3 +49,44 @@ Once `rake install` is run, you'll have a `dice` executable in your `PATH`.
 
     Options:
       -s, [--show-results], [--no-show-results]  # Show each die roll result
+
+### Examples
+
+`dice`'s default behavior depends on its arguments. Given none, it prints its version and exits.
+```
+$ dice
+Character Roller v0.1.2
+```
+
+Given a "ndn" string (i.e. 4d6), `dice` will roll and show you the resulting sum:
+```
+$ dice 4d6
+15
+```
+
+If you use the `roll` subcommand you can get more details, like the result of each individual die roll:
+```
+$ dice roll 4d6 -s
+[4, 5, 1, 1]
+11
+```
+
+You can generate a single ability score (roll 4d6, re-roll 1's, and drop the lowest die):
+```
+$ dice ability_score --show-results --bonus
+[3, 4, 5] = 12	(+1)
+```
+
+Generate all 6 of a character's ability scores at once:
+```
+$ dice ability_scores --show-results --bonuses
+[6, 6, 6] = 18	(+4)
+[3, 5, 6] = 14	(+2)
+[2, 3, 4] = 9	(-1)
+[3, 5, 6] = 14	(+2)
+[3, 4, 6] = 13	(+1)
+[4, 5, 6] = 15	(+2)
+```
+
+[random_org]: http://random.org/
+[true_random]: https://github.com/mabarroso/true-random
