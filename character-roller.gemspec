@@ -22,6 +22,8 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "rake"
   s.add_development_dependency "pry"
+  s.add_development_dependency "pry-coolline"
+  s.add_development_dependency "pry-syntax-hacks"
   s.add_development_dependency "watson-ruby"
 
   s.add_runtime_dependency "thor"
