@@ -61,7 +61,7 @@ class Roller < Thor
     print roll[:total].to_s
 
     if options.bonus
-      bonus = calculate_bonus res[:total], true
+      bonus = calculate_bonus roll[:total], true
       print "\t(#{bonus})\n"
     else
       print "\n"
