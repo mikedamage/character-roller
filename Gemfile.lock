@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    character-roller (0.1.2)
+    character-roller (0.1.3)
       thor
       true-random
 

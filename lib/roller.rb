@@ -9,7 +9,8 @@ require 'true-random'
 class Roller < Thor
   include Thor::Actions
 
-  JSONIP_URL = "http://jsonip.com/"
+  JSONIP_URL  = "http://jsonip.com/"
+  NDN_PATTERN = %r{(\d+)[dD](\d+)}
 
   default_task :version
 
@@ -27,8 +28,7 @@ class Roller < Thor
 
   desc 'roll NdN', 'Rolls N, N-sided dice and returns the total result'
   def roll(ndn)
-    match_reg = %r{(\d+)[dD](\d+)}
-    matches   = match_reg.match ndn
+    matches = NDN_PATTERN.match ndn
 
     if matches.length === 3
       dice  = matches[1].to_i

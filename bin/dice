@@ -4,7 +4,7 @@ $:.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 require 'roller'
 
 unless ARGV.empty?
-  if ARGV.first =~ /\d+[dD]\d+/
+  if ARGV.first =~ Roller::NDN_PATTERN
     Roller.new.roll(ARGV.first)
   else
     Roller.start
