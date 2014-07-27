@@ -10,7 +10,7 @@ class Roller < Thor
   include Thor::Actions
 
   JSONIP_URL  = "http://jsonip.com/"
-  NDN_PATTERN = %r{(\d+)[dD](\d+)}
+  NDN_PATTERN = %r{(\d+)[dD](\d+)\+?(\d+)?}
 
   default_task :version
 
@@ -29,16 +29,24 @@ class Roller < Thor
   desc 'roll NdN', 'Rolls N, N-sided dice and returns the total result'
   def roll(ndn)
     matches = NDN_PATTERN.match ndn
+    bonus   = 0
 
-    if matches.length === 3
+    if matches.length === 4
       dice  = matches[1].to_i
       sides = matches[2].to_i
+      bonus = matches[3].to_i if matches[3]
 
-      rolls = roll_dice dice, sides
-      total = rolls.reduce :+
+      rolls  = roll_dice dice, sides
+      total  = rolls.reduce :+
+      total += bonus
 
-      p rolls if options.show_results
-      say total
+      if options.show_results
+        print rolls.to_s
+        print " + #{bonus.to_s}"
+        print " = #{total}\n"
+      else
+        say total
+      end
     else
       say "Invalid input", :red
       exit
