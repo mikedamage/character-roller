@@ -71,6 +71,12 @@ $ dice roll 4d6 -s
 11
 ```
 
+You can also add a bonus to the randomly determined total:
+```
+dice roll 8d12+12 -s
+[10, 10, 1, 7, 11, 9, 2, 2] + 12 = 64
+```
+
 You can generate a single ability score (roll 4d6, re-roll 1's, and drop the lowest die):
 ```
 $ dice ability_score --show-results --bonus
